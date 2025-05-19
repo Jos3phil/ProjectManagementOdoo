@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_form" model="ir.ui.view">
+        <field name="name">project.form</field>
+        <field name="model">project.management</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="supervisor_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="description"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                        <field name="progress" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_list" model="ir.ui.view">
+        <field name="name">project.list</field>
+        <field name="model">project.management</field>
+        <field name="arch" type="xml">
+            <list string="Projects">
+                <field name="name"/>
+                <field name="supervisor_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+                <field name="progress"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_project_management" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">project.management</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

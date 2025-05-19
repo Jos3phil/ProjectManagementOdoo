@@ -1,0 +1,46 @@
+<odoo>
+    <record id="view_task_form" model="ir.ui.view">
+        <field name="name">task.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="project_id" options="{'no_create': True}"/>
+                        <field name="executor_id" options="{'no_create': True}"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="description"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_task_tree" model="ir.ui.view">
+        <field name="name">task.tree</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree string="Tasks">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="executor_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_task" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>You can manage your tasks from here.</p>
+        </field>
+    </record>
+</odoo>

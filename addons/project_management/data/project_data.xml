@@ -1,0 +1,45 @@
+<odoo>
+    <record id="role_administrator" model="project.role">
+        <field name="name">Administrator</field>
+        <field name="description">Administrator with full access to all features</field>
+    </record>
+
+    <record id="role_supervisor" model="project.role">
+        <field name="name">Supervisor</field>
+        <field name="description">Can manage projects and oversee execution</field>
+    </record>
+
+    <record id="role_executor" model="project.role">
+        <field name="name">Executor</field>
+        <field name="description">Can manage and execute tasks</field>
+    </record>
+
+    <record id="project_example" model="project.management">
+        <field name="name">Example Project</field>
+        <field name="supervisor_id" ref="base.user_admin"/>
+        <field name="date_start">2023-10-01</field>
+        <field name="date_end">2023-12-31</field>
+        <field name="description">This is an example project for demonstration purposes.</field>
+        <field name="state">in_progress</field>
+    </record>
+
+    <record id="task_example_1" model="project.task">
+        <field name="name">Task 1</field>
+        <field name="project_id" ref="project_example"/>
+        <field name="executor_id" ref="base.user_admin"/>
+        <field name="date_start">2023-10-01</field>
+        <field name="date_end">2023-10-15</field>
+        <field name="description">This is the first task of the example project.</field>
+        <field name="state">in_progress</field>
+    </record>
+
+    <record id="task_example_2" model="project.task">
+        <field name="name">Task 2</field>
+        <field name="project_id" ref="project_example"/>
+        <field name="executor_id" ref="base.user_admin"/>
+        <field name="date_start">2023-10-16</field>
+        <field name="date_end">2023-10-31</field>
+        <field name="description">This is the second task of the example project.</field>
+        <field name="state">draft</field>
+    </record>
+</odoo>
