@@ -1,46 +1,71 @@
 <odoo>
     <record id="view_task_form" model="ir.ui.view">
-        <field name="name">task.form</field>
+        <field name="name">project.task.form</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            <form string="Task">
+            <form>
+                <header>
+                    <button name="action_start" string="Start Task" type="object" class="oe_highlight" 
+                            invisible="state not in ('draft')"/>
+                    <button name="action_complete" string="Mark as Completed" type="object" class="oe_highlight" 
+                            invisible="state not in ('in_progress')"/>
+                    <button name="action_cancel" string="Cancel" type="object" 
+                            invisible="state not in ('draft', 'in_progress')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Task Name"/></h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="project_id" options="{'no_create': True}"/>
-                        <field name="executor_id" options="{'no_create': True}"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="description"/>
-                        <field name="attachment_ids" widget="many2many_binary"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,cancelled"/>
+                        <group>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="executor_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Add a description..."/>
+                        </page>
+                        <page string="Attachments" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="view_task_tree" model="ir.ui.view">
-        <field name="name">task.tree</field>
+    <record id="view_task_list" model="ir.ui.view">
+        <field name="name">project.task.list</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            <tree string="Tasks">
+            <list decoration-info="state == 'draft'" decoration-warning="state == 'in_progress'" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="executor_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="state"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_task" model="ir.actions.act_window">
         <field name="name">Tasks</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
-            <p>You can manage your tasks from here.</p>
+            <p class="o_view_nocontent_smiling_face">
+                Create your first task
+            </p>
+            <p>
+                You can manage your tasks from here.
+            </p>
         </field>
     </record>
 </odoo>

@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Main Menu -->
-    <menuitem id="menu_project_management_root" name="Project Management" sequence="10"/>
+    <!-- Menú principal que aparecerá en la barra superior -->
+    <menuitem id="menu_project_management_root" 
+              name="Projects" 
+              web_icon="project_management,static/description/icon.png"
+              sequence="10"/>
 
-    <!-- Project Module Submenus -->
-   <menuitem id="menu_project_management" name="Projects" parent="menu_project_management_root" action="action_project_management" sequence="10"/>
-    <!-- Al final de task_views.xml -->
-<menuitem id="menu_task" name="Tasks" parent="menu_project_management_root" action="action_project_task" sequence="20"/>
+    <!-- Submenús -->
+    <menuitem id="menu_project_management" 
+              name="Projects" 
+              parent="menu_project_management_root" 
+              action="action_project_management" 
+              sequence="10"/>
     
-    <!-- Si no tienes una acción para roles de usuario, elimina esta línea: -->
-    <!-- <menuitem id="menu_user_roles" name="User Roles" parent="menu_project_management_root" action="action_role" sequence="30"/> -->
+    <menuitem id="menu_task" 
+              name="Tasks" 
+              parent="menu_project_management_root" 
+              action="action_task" 
+              sequence="20"/>
+    
+    <menuitem id="menu_user_roles" 
+              name="User Roles" 
+              parent="menu_project_management_root" 
+              action="action_role" 
+              sequence="30"/>
 </odoo>

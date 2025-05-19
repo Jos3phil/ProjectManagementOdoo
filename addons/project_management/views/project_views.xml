@@ -1,37 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_project_form" model="ir.ui.view">
-        <field name="name">project.form</field>
+        <field name="name">project.management.form</field>
         <field name="model">project.management</field>
         <field name="arch" type="xml">
-            <form string="Project">
+            <form>
+                <header>
+                    <button name="action_start" string="Start Project" type="object" class="oe_highlight"
+                            invisible="state not in ('draft')"/>
+                    <button name="action_complete" string="Mark as Completed" type="object" class="oe_highlight"
+                            invisible="state not in ('in_progress')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Project Name"/></h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="supervisor_id"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="description"/>
-                        <field name="attachment_ids" widget="many2many_binary"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
-                        <field name="progress" readonly="1"/>
+                        <group>
+                            <field name="supervisor_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Add a description..."/>
+                        </page>
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids"/>
+                        </page>
+                        <page string="Attachments" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
     <record id="view_project_list" model="ir.ui.view">
-        <field name="name">project.list</field>
+        <field name="name">project.management.list</field>
         <field name="model">project.management</field>
         <field name="arch" type="xml">
-            <list string="Projects">
+            <list decoration-info="state == 'draft'" decoration-warning="state == 'in_progress'" decoration-success="state == 'completed'">
                 <field name="name"/>
                 <field name="supervisor_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="state"/>
-                <field name="progress"/>
+                <field name="progress" widget="progressbar"/>
             </list>
         </field>
     </record>
@@ -40,5 +59,13 @@
         <field name="name">Projects</field>
         <field name="res_model">project.management</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project
+            </p>
+            <p>
+                Manage your projects, tasks and team members efficiently.
+            </p>
+        </field>
     </record>
 </odoo>
