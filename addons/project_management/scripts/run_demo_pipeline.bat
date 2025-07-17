@@ -1,6 +1,6 @@
 @echo off
 rem ==================================================
-rem ===      PROTOTYPE AUTOMATION PIPELINE (DEMO)  ===
+rem ===   AUTOMATION PIPELINE - VERSIÓN VICTORIOSA   ===
 rem ==================================================
 
 echo.
@@ -17,7 +17,7 @@ rem =================================================================
 
 rem --- ETAPA 1: TESTS UNITARIOS PUROS ---
 call :log_step 1 "Ejecutando Tests Unitarios Puros (Logica aislada)..."
-python -m unittest tests.test_unit_pure -v
+python -m unittest tests/test_unit_pure.py -v
 if %errorlevel% equ 0 (
     call :log_success "Tests Unitarios Puros completados sin errores."
     set "unit_passed=true"
@@ -46,6 +46,13 @@ ping -n 4 127.0.0.1 > nul
 call :log_skipped "Estos tests son mas lentos y se ejecutan en el pipeline nocturno."
 
 rem =================================================================
+rem               NUEVA ETAPA 5: ANÁLISIS DE RENDIMIENTO
+rem =================================================================
+call :log_step 5 "Generando Reporte de Rendimiento..."
+python scripts/show_metrics.py
+
+
+rem =================================================================
 rem               REPORTE FINAL
 rem =================================================================
 echo.
@@ -66,6 +73,7 @@ if "%integration_passed%"=="true" (
 
 echo Etapa 3: Tests de Core ^(Password Policy^)... SIMULADO ^(OK^)
 echo Etapa 4: Tests Funcionales ^(E2E^)... SIMULADO ^(OK^)
+echo Etapa 5: Analisis de Rendimiento.......... GENERADO
 echo.
 echo ===================================
 
@@ -99,18 +107,3 @@ rem =================================================================
     echo SIMULADO: %1 ^(Integracion en progreso^)
     echo.
     goto:eof
-
-rem =================================================================
-rem               NUEVA ETAPA 5: ANÁLISIS DE RENDIMIENTO
-rem =================================================================
-call :log_step 5 "Generando Reporte de Rendimiento..."
-rem Llamamos a nuestro script de Python
-python scripts/show_metrics.py
-
-
-rem =================================================================
-rem               REPORTE FINAL
-rem =================================================================
-echo.
-echo ==== REPORTE FINAL DEL PIPELINE ====
-rem ... (el resto del script se queda igual) ...
