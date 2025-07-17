@@ -8,7 +8,7 @@
     """,
     "author": "Timothy Calderon",
     "website": "https://yourwebsite.com",
-    "depends": ["base", "mail"],
+    "depends": ["base", "mail","auth_password_policy"],
     "data": [
         "security/project_security.xml",
         "security/ir.model.access.csv",
