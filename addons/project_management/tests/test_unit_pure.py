@@ -5,6 +5,7 @@ from datetime import date, timedelta
 # NOTA: Estos tests NO se ejecutan con Odoo automáticamente
 # Ejecutar manualmente con: python -m unittest tests.test_unit_pure
 
+
 class TestTaskUnitarios(unittest.TestCase):
     """Tests unitarios puros sin base de datos"""
     
@@ -250,6 +251,261 @@ class TestProjectUnitarios(unittest.TestCase):
         # Act & Assert - In Progress -> Completed
         project_state = "completed"
         self.assertEqual(project_state, "completed")
+
+class TestProjectRoleUnitarios(unittest.TestCase):
+    """Tests unitarios puros para ProjectRole"""
+    
+    def setUp(self):
+        # Mock del role
+        self.role = Mock()
+        self.role.name = "Test Role"
+        self.role.description = "Test Description"
+        self.role.user_ids = []
+        self.role.permissions = []
+    
+    # =============== TESTS DE CREACIÓN DE ROLES ===============
+    
+    def test_role_creation_basic_properties(self):
+        """Test unitario: propiedades básicas de un rol"""
+        # Arrange
+        role_name = "Project Manager"
+        role_description = "Manages projects and teams"
         
+        # Act - simular creación
+        role = Mock()
+        role.name = role_name
+        role.description = role_description
+        role.user_ids = []
+        role.permissions = []
+        
+        # Assert
+        self.assertEqual(role.name, "Project Manager")
+        self.assertEqual(role.description, "Manages projects and teams")
+        self.assertEqual(len(role.user_ids), 0)
+        self.assertEqual(len(role.permissions), 0)
+    
+    def test_role_with_initial_data(self):
+        """Test unitario: rol con datos iniciales"""
+        # Arrange & Act
+        role = Mock()
+        role.name = "Developer"
+        role.description = "Software developer role"
+        role.user_ids = [1, 2, 3]  # IDs simulados
+        role.permissions = [101, 102]  # IDs simulados
+        
+        # Assert
+        self.assertEqual(role.name, "Developer")
+        self.assertEqual(len(role.user_ids), 3)
+        self.assertEqual(len(role.permissions), 2)
+    
+    # =============== TESTS DE ASIGNACIÓN DE USUARIOS ===============
+    
+    def test_assign_role_to_user_empty_list(self):
+        """Test unitario: asignar rol a usuario cuando lista está vacía"""
+        # Arrange
+        role = Mock()
+        role.user_ids = []
+        user_id = 123
+        
+        # Act - simular lógica de assign_role_to_user
+        if user_id not in role.user_ids:
+            role.user_ids.append(user_id)
+        
+        # Assert
+        self.assertIn(user_id, role.user_ids)
+        self.assertEqual(len(role.user_ids), 1)
+    
+    def test_assign_role_to_user_existing_list(self):
+        """Test unitario: asignar rol a usuario con lista existente"""
+        # Arrange
+        role = Mock()
+        role.user_ids = [100, 200]
+        user_id = 300
+        
+        # Act
+        if user_id not in role.user_ids:
+            role.user_ids.append(user_id)
+        
+        # Assert
+        self.assertIn(user_id, role.user_ids)
+        self.assertEqual(len(role.user_ids), 3)
+        self.assertIn(100, role.user_ids)
+        self.assertIn(200, role.user_ids)
+    
+    def test_assign_role_prevent_duplicate_users(self):
+        """Test unitario: prevenir usuarios duplicados en rol"""
+        # Arrange
+        role = Mock()
+        role.user_ids = [100, 200]
+        user_id = 200  # Usuario ya existente
+        
+        # Act - simular lógica para prevenir duplicados
+        if user_id not in role.user_ids:
+            role.user_ids.append(user_id)
+        
+        # Assert
+        self.assertEqual(len(role.user_ids), 2)  # No se agregó duplicado
+        self.assertEqual(role.user_ids.count(200), 1)
+    
+    def test_assign_multiple_users_to_role(self):
+        """Test unitario: asignar múltiples usuarios a un rol"""
+        # Arrange
+        role = Mock()
+        role.user_ids = []
+        user_ids = [101, 102, 103, 104]
+        
+        # Act
+        for user_id in user_ids:
+            if user_id not in role.user_ids:
+                role.user_ids.append(user_id)
+        
+        # Assert
+        self.assertEqual(len(role.user_ids), 4)
+        for user_id in user_ids:
+            self.assertIn(user_id, role.user_ids)
+    
+    # =============== TESTS DE GESTIÓN DE PERMISOS ===============
+    
+    def test_role_permissions_assignment(self):
+        """Test unitario: asignación de permisos a rol"""
+        # Arrange
+        role = Mock()
+        role.permissions = []
+        permission_ids = [501, 502, 503]
+        
+        # Act - simular asignación de permisos
+        role.permissions.extend(permission_ids)
+        
+        # Assert
+        self.assertEqual(len(role.permissions), 3)
+        for permission_id in permission_ids:
+            self.assertIn(permission_id, role.permissions)
+    
+    def test_role_permissions_update(self):
+        """Test unitario: actualización de permisos de rol"""
+        # Arrange
+        role = Mock()
+        role.permissions = [501, 502]
+        new_permissions = [503, 504, 505]
+        
+        # Act - simular reemplazo de permisos
+        role.permissions = new_permissions.copy()
+        
+        # Assert
+        self.assertEqual(len(role.permissions), 3)
+        self.assertNotIn(501, role.permissions)  # Permisos antiguos removidos
+        self.assertNotIn(502, role.permissions)
+        for permission_id in new_permissions:
+            self.assertIn(permission_id, role.permissions)
+    
+    def test_role_add_permission_to_existing(self):
+        """Test unitario: agregar permiso a lista existente"""
+        # Arrange
+        role = Mock()
+        role.permissions = [501, 502]
+        new_permission = 503
+        
+        # Act
+        if new_permission not in role.permissions:
+            role.permissions.append(new_permission)
+        
+        # Assert
+        self.assertEqual(len(role.permissions), 3)
+        self.assertIn(new_permission, role.permissions)
+        self.assertIn(501, role.permissions)  # Permisos anteriores conservados
+        self.assertIn(502, role.permissions)
+    
+    # =============== TESTS DE VALIDACIÓN DE ROLES ===============
+    
+    def test_role_name_validation(self):
+        """Test unitario: validación de nombre de rol"""
+        # Arrange & Act
+        valid_names = ["Project Manager", "Developer", "QA Tester", "Admin"]
+        invalid_names = ["", None, "   ", "a" * 256]  # Nombres inválidos
+        
+        # Assert - nombres válidos
+        for name in valid_names:
+            is_valid = name and isinstance(name, str) and len(name.strip()) > 0 and len(name) < 255
+            self.assertTrue(is_valid, f"Name '{name}' should be valid")
+        
+        # Assert - nombres inválidos
+        for name in invalid_names:
+            if name is None:
+                is_valid = False
+            else:
+                is_valid = name and isinstance(name, str) and len(name.strip()) > 0 and len(name) < 255
+            self.assertFalse(is_valid, f"Name '{name}' should be invalid")
+    
+    def test_role_user_list_operations(self):
+        """Test unitario: operaciones con lista de usuarios"""
+        # Arrange
+        role = Mock()
+        role.user_ids = [100, 200, 300]
+        
+        # Act & Assert - remover usuario
+        user_to_remove = 200
+        if user_to_remove in role.user_ids:
+            role.user_ids.remove(user_to_remove)
+        
+        self.assertEqual(len(role.user_ids), 2)
+        self.assertNotIn(user_to_remove, role.user_ids)
+        
+        # Act & Assert - verificar usuario existe
+        user_to_check = 300
+        user_exists = user_to_check in role.user_ids
+        self.assertTrue(user_exists)
+        
+        # Act & Assert - contar usuarios
+        user_count = len(role.user_ids)
+        self.assertEqual(user_count, 2)
+    
+    # =============== TESTS DE EDGE CASES ===============
+    
+    def test_role_empty_state(self):
+        """Test unitario: estado vacío del rol"""
+        # Arrange
+        role = Mock()
+        role.name = ""
+        role.description = ""
+        role.user_ids = []
+        role.permissions = []
+        
+        # Act & Assert
+        self.assertEqual(len(role.user_ids), 0)
+        self.assertEqual(len(role.permissions), 0)
+        self.assertEqual(role.name, "")
+        self.assertEqual(role.description, "")
+    
+    def test_role_large_user_list(self):
+        """Test unitario: rol con gran cantidad de usuarios"""
+        # Arrange
+        role = Mock()
+        large_user_list = list(range(1, 1001))  # 1000 usuarios
+        role.user_ids = large_user_list.copy()
+        
+        # Act & Assert
+        self.assertEqual(len(role.user_ids), 1000)
+        self.assertIn(1, role.user_ids)
+        self.assertIn(1000, role.user_ids)
+        self.assertIn(500, role.user_ids)
+    
+    def test_assign_role_return_value(self):
+        """Test unitario: valor de retorno de assign_role_to_user"""
+        # Arrange
+        role = Mock()
+        role.user_ids = []
+        user_id = 123
+        
+        # Act - simular el método que retorna True
+        if user_id not in role.user_ids:
+            role.user_ids.append(user_id)
+            result = True
+        else:
+            result = False
+        
+        # Assert
+        self.assertTrue(result)
+        self.assertIn(user_id, role.user_ids)
+
 if __name__ == '__main__':
     unittest.main()
