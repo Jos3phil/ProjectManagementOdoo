@@ -29,7 +29,7 @@ jobs:
 
       # 2. Levantar el entorno de Docker Compose en segundo plano
       - name: 🐳 Build and start Docker services
-        run: docker-compose up -d
+        run: docker compose up -d
 
       # 3. ¡CRUCIAL! Esperar a que la base de datos esté lista
       - name: ⏳ Wait for services to be ready
