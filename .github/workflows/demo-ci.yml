@@ -28,11 +28,16 @@ jobs:
       - name: ⏳ Wait for PostgreSQL to be ready
         run: sleep 30
 
-      # 4. Ejecutar el script con la RUTA CORRECTA y el COMANDO MODERNO
+            # ... (los pasos anteriores de checkout, docker compose up, y sleep se quedan igual) ...
+
+      # 4. Ejecutar el script con la RUTA ABSOLUTA DENTRO DEL CONTENEDOR
       - name: 🚀 Execute the Demo Pipeline Script
         run: |
-          # Damos permisos de ejecución al script en su nueva ubicación
+          # ¡OJO! El primer chmod se ejecuta FUERA del contenedor, en el runner.
+          # Así que la ruta relativa SÍ funciona aquí.
           chmod +x addons/project_management/scripts/run_demo_pipeline.sh
 
-          # Ejecutamos el script usando el comando moderno de docker compose
-          docker compose exec -T web ./addons/project_management/scripts/run_demo_pipeline.sh
+          # ¡AQUÍ ESTÁ LA MAGIA!
+          # Al ejecutar DENTRO del contenedor con 'docker compose exec',
+          # usamos la ruta ABSOLUTA donde Docker montó los addons.
+          docker compose exec -T web /mnt/extra-addons/project_management/scripts/run_demo_pipeline.sh
