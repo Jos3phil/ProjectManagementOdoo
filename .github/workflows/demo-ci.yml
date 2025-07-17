@@ -1,0 +1,43 @@
+# ========================================================
+# === WORKFLOW DE GITHUB ACTIONS - VERSIÓN DEFINITIVA ===
+# ========================================================
+name: 🚀 CI/CD Demo Pipeline - VICTORIA
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-demo-pipeline:
+    name: 🧪 Run Automated Demo
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Levantar el entorno con el COMANDO MODERNO
+      - name: 🐳 Build and start Docker services
+        run: docker compose up -d
+
+      # 3. Esperar a que la BD esté lista
+      - name: ⏳ Wait for PostgreSQL to be ready
+        run: sleep 30
+
+            # ... (los pasos anteriores de checkout, docker compose up, y sleep se quedan igual) ...
+
+      # 4. Ejecutar el script con la RUTA ABSOLUTA DENTRO DEL CONTENEDOR
+      - name: 🚀 Execute the Demo Pipeline Script
+        run: |
+          # ¡OJO! El primer chmod se ejecuta FUERA del contenedor, en el runner.
+          # Así que la ruta relativa SÍ funciona aquí.
+          chmod +x addons/project_management/scripts/run_demo_pipeline.sh
+
+          # ¡AQUÍ ESTÁ LA MAGIA!
+          # Al ejecutar DENTRO del contenedor con 'docker compose exec',
+          # usamos la ruta ABSOLUTA donde Docker montó los addons.
+          docker compose exec -T web /mnt/extra-addons/project_management/scripts/run_demo_pipeline.sh
