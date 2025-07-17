@@ -1,44 +1,38 @@
-# Nombre del workflow que verás en la pestaña "Actions" de GitHub
-name: 🚀 CI/CD Demo Pipeline
+# ========================================================
+# === WORKFLOW DE GITHUB ACTIONS - VERSIÓN DEFINITIVA ===
+# ========================================================
+name: 🚀 CI/CD Demo Pipeline - VICTORIA
 
-# Disparadores: ¿Cuándo se debe ejecutar este workflow?
 on:
-  # Cuando se haga un push a las ramas 'main' o 'develop'
   push:
     branches: [ main, develop ]
-  # También cuando se cree un Pull Request hacia 'main'
   pull_request:
     branches: [ main ]
-  # Permite ejecutarlo manualmente desde la interfaz de GitHub
   workflow_dispatch:
 
-# Trabajos (Jobs): Las tareas que se van a realizar
 jobs:
-  # Nombre del único job que tenemos
   run-demo-pipeline:
-    # Nombre que se mostrará en la interfaz
     name: 🧪 Run Automated Demo
-    # La máquina virtual que se usará. ¡Siempre Linux (ubuntu-latest)!
     runs-on: ubuntu-latest
 
-    # Pasos (Steps): La secuencia de comandos a ejecutar
     steps:
-      # 1. Descargar el código de tu repositorio a la máquina virtual
+      # 1. Descargar el código
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      # 2. Levantar el entorno de Docker Compose en segundo plano
+      # 2. Levantar el entorno con el COMANDO MODERNO
       - name: 🐳 Build and start Docker services
         run: docker compose up -d
 
-      # 3. ¡CRUCIAL! Esperar a que la base de datos esté lista
-      - name: ⏳ Wait for services to be ready
-        run: sleep 30 # 30 segundos es una espera segura
+      # 3. Esperar a que la BD esté lista
+      - name: ⏳ Wait for PostgreSQL to be ready
+        run: sleep 30
 
-      # 4. Ejecutar el script de la demo DENTRO del contenedor de Odoo
+      # 4. Ejecutar el script con la RUTA CORRECTA y el COMANDO MODERNO
       - name: 🚀 Execute the Demo Pipeline Script
         run: |
-          # Damos permisos de ejecución al script
+          # Damos permisos de ejecución al script en su nueva ubicación
           chmod +x addons/project_management/scripts/run_demo_pipeline.sh
-          # Ejecutamos el script usando docker-compose exec
-          docker-compose exec -T web ./addons/project_management/scripts/run_demo_pipeline.sh
+
+          # Ejecutamos el script usando el comando moderno de docker compose
+          docker compose exec -T web ./addons/project_management/scripts/run_demo_pipeline.sh
