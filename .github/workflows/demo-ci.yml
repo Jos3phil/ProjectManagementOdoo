@@ -39,6 +39,6 @@ jobs:
       - name: 🚀 Execute the Demo Pipeline Script
         run: |
           # Damos permisos de ejecución al script
-          chmod +x scripts/run_demo_pipeline.sh
+          chmod +x addons/project_management/scripts/run_demo_pipeline.sh
           # Ejecutamos el script usando docker-compose exec
-          docker-compose exec -T web .addons/project_management/scripts/run_demo_pipeline.sh
+          docker-compose exec -T web ./addons/project_management/scripts/run_demo_pipeline.sh
