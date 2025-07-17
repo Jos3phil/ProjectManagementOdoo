@@ -72,6 +72,13 @@ sleep 3
 log_skipped "Estos tests son más lentos y se ejecutan en el pipeline nocturno. La arquitectura los soporta."
 FUNCTIONAL_PASSED=true # Forzamos a que pase para la demo.
 
+# =====================================================================
+#               NUEVA ETAPA 5: ANÁLISIS DE RENDIMIENTO
+# =====================================================================
+log_step 5 "Generando Reporte de Rendimiento..."
+# Llamamos al script de Python DENTRO del contenedor, pasándole un argumento
+# para que sepa que está en modo CI.
+docker compose exec -T web python /mnt/extra-addons/project_management/scripts/show_metrics.py GITHUB_ACTIONS
 # =================================================================
 #               REPORTE FINAL DEL PROTOTIPO
 # =================================================================

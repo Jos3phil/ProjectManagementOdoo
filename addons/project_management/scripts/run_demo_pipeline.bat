@@ -99,3 +99,18 @@ rem =================================================================
     echo SIMULADO: %1 ^(Integracion en progreso^)
     echo.
     goto:eof
+
+rem =================================================================
+rem               NUEVA ETAPA 5: ANÁLISIS DE RENDIMIENTO
+rem =================================================================
+call :log_step 5 "Generando Reporte de Rendimiento..."
+rem Llamamos a nuestro script de Python
+python scripts/show_metrics.py
+
+
+rem =================================================================
+rem               REPORTE FINAL
+rem =================================================================
+echo.
+echo ==== REPORTE FINAL DEL PIPELINE ====
+rem ... (el resto del script se queda igual) ...
