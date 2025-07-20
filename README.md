@@ -406,8 +406,8 @@ Este proyecto está bajo la licencia LGPL-3. Ver archivo `LICENSE` para más det
 
 **Timothy Calderon**  
 Desarrollador Full-Stack especializado en Odoo  
-📧 [contacto@example.com](mailto:contacto@example.com)  
-🌐 [LinkedIn](https://linkedin.com/in/timothy-calderon)
+📧 [contacto@example.com](mailto:josephtcgmille@gmail.com)  
+🌐 [LinkedIn](https://www.linkedin.com/in/joseph-calde/)
 
 ---
 
